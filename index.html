@@ -89,4 +89,86 @@
   <script>
     const boardEl    = document.getElementById('board');
     const resetBtn   = document.getElementById('reset');
-    
+    const xWinsEl    = document.getElementById('x-wins');
+    const oWinsEl    = document.getElementById('o-wins');
+
+    let boardState    = Array(9).fill('');
+    let currentPlayer = 'X';
+    let gameActive    = true;
+    let scores        = { X: 0, O: 0 };
+
+    const winCombos = [
+      [0,1,2], [3,4,5], [6,7,8],
+      [0,3,6], [1,4,7], [2,5,8],
+      [0,4,8], [2,4,6]
+    ];
+
+    // Cria ou redesenha o tabuleiro
+    function renderBoard() {
+      boardEl.innerHTML = '';
+      boardState.forEach((cell, idx) => {
+        const div = document.createElement('div');
+        div.className = 'cell';
+        div.dataset.idx = idx;
+        div.textContent = cell;
+        div.addEventListener('click', handleClick);
+        boardEl.appendChild(div);
+      });
+    }
+
+    // Ao clicar numa célula
+    function handleClick(e) {
+      const idx = e.target.dataset.idx;
+      if (!gameActive || boardState[idx]) return;
+
+      boardState[idx] = currentPlayer;
+      renderBoard();
+
+      if (checkWin()) {
+        alert(`Jogador ${currentPlayer} venceu!`);
+        scores[currentPlayer]++;
+        updateScoreboard();
+        gameActive = false;
+      } else if (boardState.every(v => v)) {
+        alert('Empate!');
+        gameActive = false;
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      }
+    }
+
+    // Verifica vitória
+    function checkWin() {
+      return winCombos.some(combo => {
+        const [a, b, c] = combo;
+        return (
+          boardState[a] &&
+          boardState[a] === boardState[b] &&
+          boardState[a] === boardState[c]
+        );
+      });
+    }
+
+    // Atualiza placar na tela
+    function updateScoreboard() {
+      xWinsEl.textContent = scores.X;
+      oWinsEl.textContent = scores.O;
+    }
+
+    // Reinicia partida
+    function resetGame() {
+      boardState    = Array(9).fill('');
+      currentPlayer = 'X';
+      gameActive    = true;
+      renderBoard();
+    }
+
+    resetBtn.addEventListener('click', resetGame);
+
+    // Inicialização
+    renderBoard();
+    updateScoreboard();
+  </script>
+
+</body>
+</html>

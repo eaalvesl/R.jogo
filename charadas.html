@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jogo de Charadas</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jogo de Adivinhação de Charadas</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 40px 20px;
+      padding: 30px;
     }
 
     h1 {
@@ -21,58 +21,64 @@
 
     .container {
       background: #fff;
-      padding: 30px;
+      padding: 25px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      max-width: 500px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       width: 100%;
+      max-width: 500px;
       text-align: center;
     }
 
     #charada {
       font-size: 18px;
-      margin-bottom: 20px;
       color: #444;
+      margin-bottom: 15px;
     }
 
     input[type="text"] {
+      width: 90%;
       padding: 10px;
-      width: 80%;
+      font-size: 16px;
+      margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 8px;
-      font-size: 16px;
     }
 
     button {
-      margin-top: 15px;
       padding: 10px 20px;
       font-size: 16px;
+      margin-top: 10px;
       border: none;
       border-radius: 8px;
+      cursor: pointer;
       background-color: #007bff;
       color: white;
-      cursor: pointer;
-      transition: background 0.3s;
     }
 
     button:hover {
       background-color: #0056b3;
     }
 
-    #feedback {
-      margin-top: 15px;
-      font-size: 16px;
-      font-weight: bold;
-    }
-
     #next-btn {
-      margin-top: 10px;
       background-color: #28a745;
+      margin-left: 10px;
     }
 
     #next-btn:hover {
       background-color: #1e7e34;
     }
+
+    #feedback {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    #placar {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #333;
+    }
+
   </style>
 </head>
 <body>
@@ -82,44 +88,57 @@
   <div class="container">
     <div id="charada">Carregando charada...</div>
 
-    <input type="text" id="resposta" placeholder="Digite sua resposta aqui" />
-    <br>
+    <input type="text" id="resposta" placeholder="Digite sua resposta..." />
 
-    <button id="verificar-btn" onclick="verificarResposta()">Verificar</button>
-    <button id="next-btn" onclick="proximaCharada()" style="display:none;">Próxima Charada</button>
+    <div>
+      <button onclick="verificarResposta()">Verificar</button>
+      <button id="next-btn" onclick="proximaCharada()" style="display:none;">Próxima</button>
+    </div>
 
     <div id="feedback"></div>
+
+    <div id="placar">✅ Acertos: 0 | ❌ Erros: 0</div>
   </div>
 
   <script>
     const charadas = [
       {
-        pergunta: "O que é cheio de buracos, mas ainda assim consegue reter água?",
-        resposta: "esponja"
+        pergunta: "O que pode encher uma sala inteira sem ocupar espaço?",
+        resposta: "luz"
       },
       {
-        pergunta: "O que é que quanto mais você tira, maior fica?",
+        pergunta: "Qual é o animal que anda com os pés na cabeça?",
+        resposta: "piolho"
+      },
+      {
+        pergunta: "Qual é a coisa que quanto mais se tira, maior fica?",
         resposta: "buraco"
       },
       {
-        pergunta: "O que passa diante do sol mas não faz sombra?",
-        resposta: "vento"
+        pergunta: "O que é que tem dentes, mas não morde?",
+        resposta: "pente"
       },
       {
-        pergunta: "Tenho cidades, mas não casas. Tenho montanhas, mas não árvores. Tenho água, mas não peixes. O que sou?",
-        resposta: "mapa"
+        pergunta: "Tenho chaves mas não tranco portas. O que sou?",
+        resposta: "teclado"
       },
       {
-        pergunta: "Quanto mais se tira, mais se aumenta. O que é?",
-        resposta: "buraco"
+        pergunta: "O que sempre sobe, mas nunca desce?",
+        resposta: "idade"
       },
       {
-        pergunta: "O que é que tem cabeça, tem dente, mas não é bicho nem é gente?",
-        resposta: "alho"
+        pergunta: "Você me encontra no céu, mas não sou estrela nem lua. O que sou?",
+        resposta: "nuvem"
+      },
+      {
+        pergunta: "O que é invisível e se você fala, desaparece?",
+        resposta: "silêncio"
       }
     ];
 
     let indiceAtual = 0;
+    let acertos = 0;
+    let erros = 0;
 
     function carregarCharada() {
       const atual = charadas[indiceAtual];
@@ -134,19 +153,27 @@
       const respostaCorreta = charadas[indiceAtual].resposta.toLowerCase();
 
       if (entrada === '') {
-        document.getElementById('feedback').textContent = "Digite alguma resposta!";
+        document.getElementById('feedback').textContent = "Digite uma resposta!";
         document.getElementById('feedback').style.color = "black";
         return;
       }
 
       if (entrada === respostaCorreta) {
-        document.getElementById('feedback').textContent = "✅ Acertou! Parabéns!";
+        document.getElementById('feedback').textContent = "✅ Acertou!";
         document.getElementById('feedback').style.color = "green";
-        document.getElementById('next-btn').style.display = 'inline-block';
+        acertos++;
       } else {
-        document.getElementById('feedback').textContent = "❌ Errou! Tente novamente.";
+        document.getElementById('feedback').textContent = `❌ Errou! A resposta era: ${respostaCorreta}`;
         document.getElementById('feedback').style.color = "red";
+        erros++;
       }
+
+      atualizarPlacar();
+      document.getElementById('next-btn').style.display = 'inline-block';
+    }
+
+    function atualizarPlacar() {
+      document.getElementById('placar').textContent = `✅ Acertos: ${acertos} | ❌ Erros: ${erros}`;
     }
 
     function proximaCharada() {
@@ -154,16 +181,16 @@
       if (indiceAtual >= charadas.length) {
         document.getElementById('charada').textContent = "🎉 Fim das charadas!";
         document.getElementById('resposta').style.display = 'none';
-        document.getElementById('verificar-btn').style.display = 'none';
+        document.querySelector("button").style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
-        document.getElementById('feedback').textContent = "Você completou todas as charadas! Obrigado por jogar! 👏";
-        document.getElementById('feedback').style.color = "blue";
+        document.getElementById('feedback').textContent = `Jogo finalizado! Você acertou ${acertos} e errou ${erros}. 👏`;
+        document.getElementById('feedback').style.color = "#333";
       } else {
         carregarCharada();
       }
     }
 
-    // Inicialização
+    // Início do jogo
     carregarCharada();
   </script>
 

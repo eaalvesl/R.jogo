@@ -16,6 +16,7 @@
 
     h1 {
       color: #333;
+      margin-bottom: 20px;
     }
 
     .container {
@@ -51,6 +52,7 @@
       background-color: #007bff;
       color: white;
       cursor: pointer;
+      transition: background 0.3s;
     }
 
     button:hover {
@@ -79,11 +81,14 @@
 
   <div class="container">
     <div id="charada">Carregando charada...</div>
+
     <input type="text" id="resposta" placeholder="Digite sua resposta aqui" />
     <br>
-    <button onclick="verificarResposta()">Verificar</button>
-    <div id="feedback"></div>
+
+    <button id="verificar-btn" onclick="verificarResposta()">Verificar</button>
     <button id="next-btn" onclick="proximaCharada()" style="display:none;">Próxima Charada</button>
+
+    <div id="feedback"></div>
   </div>
 
   <script>
@@ -130,6 +135,7 @@
 
       if (entrada === '') {
         document.getElementById('feedback').textContent = "Digite alguma resposta!";
+        document.getElementById('feedback').style.color = "black";
         return;
       }
 
@@ -146,11 +152,11 @@
     function proximaCharada() {
       indiceAtual++;
       if (indiceAtual >= charadas.length) {
-        document.getElementById('charada').textContent = "Fim das charadas! 🎉";
+        document.getElementById('charada').textContent = "🎉 Fim das charadas!";
         document.getElementById('resposta').style.display = 'none';
-        document.querySelector('button').style.display = 'none';
+        document.getElementById('verificar-btn').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
-        document.getElementById('feedback').textContent = "Você completou todas as charadas!";
+        document.getElementById('feedback').textContent = "Você completou todas as charadas! Obrigado por jogar! 👏";
         document.getElementById('feedback').style.color = "blue";
       } else {
         carregarCharada();

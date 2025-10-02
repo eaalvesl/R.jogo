@@ -1,67 +1,30 @@
-function robotMove() {
-  const bestMove = getBestMove();
-  makeMove(bestMove, 'O');
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jogo de Charadas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
-  if (checkWin('O')) {
-    statusElement.textContent = 'Robô venceu! 🤖';
-    gameActive = false;
-    return;
-  }
+  <h1>Jogo de Charadas 🤔</h1>
 
-  if (checkDraw()) {
-    statusElement.textContent = 'Empate! 🤝';
-    gameActive = false;
-    return;
-  }
+  <div class="container">
+    <div id="charada">Carregando charada...</div>
 
-  switchPlayer();
-}
+    <input type="text" id="resposta" placeholder="Digite sua resposta..." />
 
-function getBestMove() {
-  let bestScore = -Infinity;
-  let move;
+    <div>
+      <button onclick="verificarResposta()">Verificar</button>
+      <button id="next-btn" onclick="proximaCharada()" style="display:none;">Próxima</button>
+    </div>
 
-  for (let i = 0; i < 9; i++) {
-    if (board[i] === '') {
-      board[i] = 'O';
-      const score = minimax(board, 0, false);
-      board[i] = '';
-      if (score > bestScore) {
-        bestScore = score;
-        move = i;
-      }
-    }
-  }
+    <div id="feedback"></div>
 
-  return move;
-}
+    <div id="placar">✅ Acertos: 0 | ❌ Erros: 0</div>
+  </div>
 
-function minimax(newBoard, depth, isMaximizing) {
-  if (checkWin('O')) return 1;
-  if (checkWin('X')) return -1;
-  if (checkDraw()) return 0;
-
-  if (isMaximizing) {
-    let bestScore = -Infinity;
-    for (let i = 0; i < 9; i++) {
-      if (newBoard[i] === '') {
-        newBoard[i] = 'O';
-        const score = minimax(newBoard, depth + 1, false);
-        newBoard[i] = '';
-        bestScore = Math.max(score, bestScore);
-      }
-    }
-    return bestScore;
-  } else {
-    let bestScore = Infinity;
-    for (let i = 0; i < 9; i++) {
-      if (newBoard[i] === '') {
-        newBoard[i] = 'X';
-        const score = minimax(newBoard, depth + 1, true);
-        newBoard[i] = '';
-        bestScore = Math.min(score, bestScore);
-      }
-    }
-    return bestScore;
-  }
-}
+  <script src="script.js"></script>
+</body>
+</html>

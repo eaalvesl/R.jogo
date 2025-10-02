@@ -1,225 +1,255 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Jogo da Velha</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 30px;
-  }
-  h1 {
-    margin-bottom: 10px;
-  }
-  #mode-select {
-    margin-bottom: 20px;
-  }
-  #board {
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
-    gap: 5px;
-  }
-  .cell {
-    width: 100px;
-    height: 100px;
-    background: #eee;
-    font-size: 64px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-    border-radius: 8px;
-    transition: background 0.3s;
-  }
-  .cell:hover {
-    background: #ddd;
-  }
-  .cell.disabled {
-    cursor: default;
-    background: #ccc;
-  }
-  #status {
-    margin-top: 20px;
-    font-size: 18px;
-  }
-  button {
-    margin-top: 20px;
-    padding: 8px 16px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jogo da Velha</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    a#other-games {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+      margin-bottom: 10px;
+      transition: color 0.3s;
+    }
+
+    a#other-games:hover {
+      color: #0056b3;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    #mode-select {
+      margin-bottom: 20px;
+      background: #ffffff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      background: #ffffff;
+      font-size: 64px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      transition: background 0.3s, transform 0.1s;
+    }
+
+    .cell:hover {
+      background: #f0f0f0;
+    }
+
+    .cell:active {
+      transform: scale(0.95);
+    }
+
+    .cell.disabled {
+      cursor: default;
+      background: #e0e0e0;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Jogo da Velha</h1>
+  <!-- Link para outros jogos -->
+  <a id="other-games" href="https://example.com/jogos" target="_blank">🎮 Ver outros jogos</a>
 
-<div id="mode-select">
-  <label><input type="radio" name="mode" value="2players" checked /> 2 Jogadores</label>
-  <label style="margin-left:20px;"><input type="radio" name="mode" value="robot" /> Contra Robô</label>
-</div>
+  <h1>Jogo da Velha</h1>
 
-<div id="board">
-  <!-- 9 células do tabuleiro -->
-</div>
+  <div id="mode-select">
+    <label><input type="radio" name="mode" value="2players" checked /> 2 Jogadores</label>
+    <label style="margin-left:20px;"><input type="radio" name="mode" value="robot" /> Contra Robô</label>
+  </div>
 
-<div id="status">Turno do jogador X</div>
-<button id="restart">Reiniciar</button>
+  <div id="board">
+    <!-- 9 células do tabuleiro -->
+  </div>
 
-<script>
-  const boardElement = document.getElementById('board');
-  const statusElement = document.getElementById('status');
-  const restartBtn = document.getElementById('restart');
-  const modeRadios = document.querySelectorAll('input[name="mode"]');
+  <div id="status">Turno do jogador X</div>
+  <button id="restart">🔄 Reiniciar</button>
 
-  let board = ['', '', '', '', '', '', '', '', ''];
-  let currentPlayer = 'X';
-  let gameActive = true;
-  let mode = '2players'; // ou 'robot'
+  <script>
+    const boardElement = document.getElementById('board');
+    const statusElement = document.getElementById('status');
+    const restartBtn = document.getElementById('restart');
+    const modeRadios = document.querySelectorAll('input[name="mode"]');
 
-  // Inicializa as células
-  function createBoard() {
-    boardElement.innerHTML = '';
-    for (let i = 0; i < 9; i++) {
-      const cell = document.createElement('div');
-      cell.classList.add('cell');
-      cell.dataset.index = i;
-      cell.addEventListener('click', handleCellClick);
-      boardElement.appendChild(cell);
-    }
-  }
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let currentPlayer = 'X';
+    let gameActive = true;
+    let mode = '2players';
 
-  // Verifica vitória
-  function checkWin(player) {
-    const winPatterns = [
-      [0,1,2], [3,4,5], [6,7,8], // linhas
-      [0,3,6], [1,4,7], [2,5,8], // colunas
-      [0,4,8], [2,4,6]           // diagonais
-    ];
-
-    return winPatterns.some(pattern => 
-      pattern.every(idx => board[idx] === player)
-    );
-  }
-
-  // Verifica empate
-  function checkDraw() {
-    return board.every(cell => cell !== '');
-  }
-
-  // Atualiza o status na tela
-  function updateStatus() {
-    if (!gameActive) return;
-
-    if (mode === '2players') {
-      statusElement.textContent = `Turno do jogador ${currentPlayer}`;
-    } else if (mode === 'robot') {
-      if (currentPlayer === 'X') {
-        statusElement.textContent = 'Seu turno (X)';
-      } else {
-        statusElement.textContent = 'Turno do robô (O)';
+    function createBoard() {
+      boardElement.innerHTML = '';
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.index = i;
+        cell.addEventListener('click', handleCellClick);
+        boardElement.appendChild(cell);
       }
     }
-  }
 
-  // Lógica do clique numa célula
-  function handleCellClick(e) {
-    const idx = e.target.dataset.index;
-
-    if (!gameActive || board[idx] !== '') return;
-
-    if (mode === 'robot' && currentPlayer === 'O') {
-      // Bloqueia clique no turno do robô
-      return;
+    function checkWin(player) {
+      const winPatterns = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+      ];
+      return winPatterns.some(pattern =>
+        pattern.every(idx => board[idx] === player)
+      );
     }
 
-    makeMove(idx, currentPlayer);
-
-    if (checkWin(currentPlayer)) {
-      statusElement.textContent = `Jogador ${currentPlayer} venceu! 🎉`;
-      gameActive = false;
-      return;
-    } else if (checkDraw()) {
-      statusElement.textContent = 'Empate! 🤝';
-      gameActive = false;
-      return;
+    function checkDraw() {
+      return board.every(cell => cell !== '');
     }
 
-    switchPlayer();
-
-    if (mode === 'robot' && currentPlayer === 'O' && gameActive) {
-      // Jogada do robô com um pequeno delay para parecer mais natural
-      statusElement.textContent = 'Robô pensando...';
-      setTimeout(robotMove, 700);
-    }
-  }
-
-  // Faz a jogada
-  function makeMove(index, player) {
-    board[index] = player;
-    const cell = boardElement.querySelector(`.cell[data-index='${index}']`);
-    cell.textContent = player;
-    cell.classList.add('disabled');
-  }
-
-  // Troca o jogador atual
-  function switchPlayer() {
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-    updateStatus();
-  }
-
-  // Jogada do robô: escolher uma posição aleatória vazia
-  function robotMove() {
-    const emptyIndices = board.map((v, i) => v === '' ? i : -1).filter(i => i !== -1);
-    if (emptyIndices.length === 0) return;
-
-    // Lógica simples: escolhe aleatório
-    const choice = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-    makeMove(choice, 'O');
-
-    if (checkWin('O')) {
-      statusElement.textContent = 'Robô venceu! 🤖';
-      gameActive = false;
-      return;
-    } else if (checkDraw()) {
-      statusElement.textContent = 'Empate! 🤝';
-      gameActive = false;
-      return;
+    function updateStatus() {
+      if (!gameActive) return;
+      if (mode === '2players') {
+        statusElement.textContent = `Turno do jogador ${currentPlayer}`;
+      } else {
+        statusElement.textContent = currentPlayer === 'X'
+          ? 'Seu turno (X)'
+          : 'Turno do robô (O)';
+      }
     }
 
-    switchPlayer();
-  }
+    function handleCellClick(e) {
+      const idx = e.target.dataset.index;
+      if (!gameActive || board[idx] !== '') return;
+      if (mode === 'robot' && currentPlayer === 'O') return;
 
-  // Reinicia o jogo
-  function restartGame() {
-    board = ['', '', '', '', '', '', '', '', ''];
-    currentPlayer = 'X';
-    gameActive = true;
+      makeMove(idx, currentPlayer);
+
+      if (checkWin(currentPlayer)) {
+        statusElement.textContent = currentPlayer === 'O' && mode === 'robot'
+          ? 'Robô venceu! 🤖'
+          : `Jogador ${currentPlayer} venceu! 🎉`;
+        gameActive = false;
+        return;
+      }
+
+      if (checkDraw()) {
+        statusElement.textContent = 'Empate! 🤝';
+        gameActive = false;
+        return;
+      }
+
+      switchPlayer();
+
+      if (mode === 'robot' && currentPlayer === 'O' && gameActive) {
+        statusElement.textContent = 'Robô pensando...';
+        setTimeout(robotMove, 700);
+      }
+    }
+
+    function makeMove(index, player) {
+      board[index] = player;
+      const cell = boardElement.querySelector(`.cell[data-index='${index}']`);
+      cell.textContent = player;
+      cell.classList.add('disabled');
+    }
+
+    function switchPlayer() {
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      updateStatus();
+    }
+
+    function robotMove() {
+      const emptyIndices = board
+        .map((v, i) => v === '' ? i : -1)
+        .filter(i => i !== -1);
+
+      if (emptyIndices.length === 0) return;
+
+      const choice = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+      makeMove(choice, 'O');
+
+      if (checkWin('O')) {
+        statusElement.textContent = 'Robô venceu! 🤖';
+        gameActive = false;
+        return;
+      }
+
+      if (checkDraw()) {
+        statusElement.textContent = 'Empate! 🤝';
+        gameActive = false;
+        return;
+      }
+
+      switchPlayer();
+    }
+
+    function restartGame() {
+      board = ['', '', '', '', '', '', '', '', ''];
+      currentPlayer = 'X';
+      gameActive = true;
+      createBoard();
+      updateStatus();
+    }
+
+    function changeMode() {
+      mode = document.querySelector('input[name="mode"]:checked').value;
+      restartGame();
+    }
+
+    modeRadios.forEach(radio => radio.addEventListener('change', changeMode));
+    restartBtn.addEventListener('click', restartGame);
+
     createBoard();
     updateStatus();
-  }
-
-  // Trocar modo
-  function changeMode() {
-    mode = document.querySelector('input[name="mode"]:checked').value;
-    restartGame();
-  }
-
-  // Inicialização
-  modeRadios.forEach(radio => radio.addEventListener('change', changeMode));
-  restartBtn.addEventListener('click', restartGame);
-
-  createBoard();
-  updateStatus();
-
-</script>
+  </script>
 
 </body>
 </html>
-

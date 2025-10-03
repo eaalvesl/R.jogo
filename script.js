@@ -33,91 +33,91 @@ const charadas = [
   },
   {
     pergunta: "É seu, mas as outras pessoas usam mais do que você?",
-    resposta: "Seu nome"
+    resposta: "seu nome"
   },
   {
     pergunta: "Fica molhado enquanto seca os outros?",
-    resposta: "A toalha"
+    resposta: "a toalha"
   },
   {
     pergunta: "Tem cidade, mas não tem casas?",
-    resposta: "O mapa"
+    resposta: "o mapa"
   },
   {
     pergunta: "Você quebra antes mesmo de usar?",
-    resposta: "Um ovo"
+    resposta: "um ovo"
   },
   {
     pergunta: "Tem coroa, mas não é rei, tem escamas mas não é peixe?",
-    resposta: "O abacaxi"
+    resposta: "o abacaxi"
   },
   {
     pergunta: "É maior que um elefante, mas não pesa nada?",
-    resposta: "A sombra do elefante"
+    resposta: "a sombra do elefante"
   },
   {
-    pergunta: "Tem folhas mas não é árvore, Conta histórias mas não fala"
-    resposta: "O livro"
+    pergunta: "Tem folhas mas não é árvore, conta histórias mas não fala",
+    resposta: "o livro"
   },
   {
-    pergunta: "Tem pernas, mas não anda?"
-    resposta: "A cadeira"
+    pergunta: "Tem pernas, mas não anda?",
+    resposta: "a cadeira"
   },
   {
-    pergunta: "Anda sem sair do lugar?"
-    resposta: "O relógio"
+    pergunta: "Anda sem sair do lugar?",
+    resposta: "o relógio"
   },
   {
-    pergunta: "Quanto mais enche, mais leve fica?"
-    resposta: "O balão"
+    pergunta: "Quanto mais enche, mais leve fica?",
+    resposta: "o balão"
   },
   {
-    pergunta: "Tem língua mas não fala, tem boca mas não come?"
-    resposta: "O sapato"
-  },
-{
-    pergunta: "Cai em pé e corre deitado?"
-    resposta: "A chuva"
+    pergunta: "Tem língua mas não fala, tem boca mas não come?",
+    resposta: "o sapato"
   },
   {
-    pergunta: "Tem chave, mas não abre porta?"
-    resposta: "O teclado"
+    pergunta: "Cai em pé e corre deitado?",
+    resposta: "a chuva"
   },
   {
-    pergunta: "Sempre olha para você, mas nunca fala?"
-    resposta: "O espelho"
+    pergunta: "Tem chave, mas não abre porta?",
+    resposta: "o teclado"
   },
   {
-    pergunta: "Sou cheio de furos, mas consigo reter água?"
-    resposta: "A esponja"
+    pergunta: "Sempre olha para você, mas nunca fala?",
+    resposta: "o espelho"
   },
   {
-    pergunta: "Não tem asas mas voa, não tem olhos mas chora"
-    resposta: "A nuvem"
+    pergunta: "Sou cheio de furos, mas consigo reter água?",
+    resposta: "a esponja"
   },
   {
-    pergunta: "Sou comprado para comer, mas nunca como?"
-    resposta: "O prato"
+    pergunta: "Não tem asas mas voa, não tem olhos mas chora",
+    resposta: "a nuvem"
   },
   {
-    pergunta: "Quanto mais se espalha, menos se vê?"
-    resposta: "A neblina"
+    pergunta: "Sou comprado para comer, mas nunca como?",
+    resposta: "o prato"
   },
-   {
-    pergunta: "Quanto mais rápido você corre, mais ele se afasta?"
-    resposta: "O horizonte"
+  {
+    pergunta: "Quanto mais se espalha, menos se vê?",
+    resposta: "a neblina"
   },
-   {
-    pergunta: "Não tem asas, mas pode voar com o vento?"
-    resposta: "O papel"
+  {
+    pergunta: "Quanto mais rápido você corre, mais ele se afasta?",
+    resposta: "o horizonte"
   },
-   {
-    pergunta: "Nasce grande e morre pequeno?"
-    resposta: "O lápis"
+  {
+    pergunta: "Não tem asas, mas pode voar com o vento?",
+    resposta: "o papel"
   },
-   {
-    pergunta: "Tem um pescoço, mas não tem cabeça"
-    resposta: "A garrafa"
+  {
+    pergunta: "Nasce grande e morre pequeno?",
+    resposta: "o lápis"
+  },
+  {
+    pergunta: "Tem um pescoço, mas não tem cabeça",
+    resposta: "a garrafa"
   },
 ];
 
@@ -131,6 +131,8 @@ function carregarCharada() {
   document.getElementById('resposta').value = '';
   document.getElementById('feedback').textContent = '';
   document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('verificar-btn').style.display = 'inline-block'; // Mostrar botão verificar
+  document.getElementById('resposta').style.display = 'inline-block'; // Mostrar input resposta
 }
 
 function verificarResposta() {
@@ -155,6 +157,7 @@ function verificarResposta() {
 
   atualizarPlacar();
   document.getElementById('next-btn').style.display = 'inline-block';
+  document.getElementById('verificar-btn').style.display = 'none'; // Esconder botão verificar após resposta
 }
 
 function atualizarPlacar() {
@@ -166,7 +169,7 @@ function proximaCharada() {
   if (indiceAtual >= charadas.length) {
     document.getElementById('charada').textContent = "🎉 Fim das charadas!";
     document.getElementById('resposta').style.display = 'none';
-    document.querySelector("button").style.display = 'none';
+    document.getElementById('verificar-btn').style.display = 'none';
     document.getElementById('next-btn').style.display = 'none';
     document.getElementById('feedback').textContent = `Jogo finalizado! Você acertou ${acertos} e errou ${erros}. 👏`;
     document.getElementById('feedback').style.color = "#333";
